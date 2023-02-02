@@ -1,1 +1,5 @@
-# cg-hw-1
+# Computer Graphics Homework 1
+
+```{r}
+
+```
