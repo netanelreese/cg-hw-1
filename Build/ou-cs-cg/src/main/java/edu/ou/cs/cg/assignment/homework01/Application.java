@@ -222,7 +222,7 @@ public final class Application
 	// www.linuxfocus.org/English/January1998/article17.html
 	private void	drawSomething(GL2 gl)
 	{
-//		gl.glBegin(GL.GL_POINTS);			// Start specifying points
+		gl.glBegin(GL.GL_POINTS);			// Start specifying points
 
 		gl.glColor3f(1.0f, 1.0f, 1.0f);	// Draw in white
 		gl.glVertex2d(0.0, 0.0);			// Draw a point at the origin
