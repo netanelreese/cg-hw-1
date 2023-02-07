@@ -52,7 +52,7 @@ public final class Application
 	//**********************************************************************
 
 	private static final String		DEFAULT_NAME = "Homework01";
-	private static final Dimension		DEFAULT_SIZE = new Dimension(750, 750);
+	private static final Dimension		DEFAULT_SIZE = new Dimension(1280, 720);
 
 	//**********************************************************************
 	// Public Class Members
@@ -70,6 +70,8 @@ public final class Application
 	private int				h;				// Canvas height
 	private int				k = 0;			// Animation counter
 	private TextRenderer		renderer;
+	private int m = 1;
+	private int iter = 0;
 
 	//**********************************************************************
 	// Main
@@ -182,6 +184,15 @@ public final class Application
 	private void	update(GLAutoDrawable drawable)
 	{
 		k++;									// Advance animation counter
+
+		if (m > 100000)	{					// Check point cap
+			m = 1;//reset point count
+			++iter;
+		}					//increment iteration
+		else
+			m++;								// Faster increase at low counts
+
+		m = (int)Math.floor(m * 1.01) + 1;	k++;									// Advance animation counter
 	}
 
 	// Render the scene model and display the current animation frame.
@@ -222,12 +233,55 @@ public final class Application
 	// www.linuxfocus.org/English/January1998/article17.html
 	private void	drawSomething(GL2 gl)
 	{
-		gl.glBegin(GL.GL_POINTS);			// Start specifying points
+		if(iter==0){
+		gl.glBegin(GL.GL_POINTS);				// Start specifying points
+		}
+		else {
+			gl.glBegin(GL.GL_LINE_STRIP);
+		}
+		//double		dt = 0.01;					// Integration step size
+		//double		sigma = 10.0;				// Constant for updating x
+		//double		rho = 28.0;				// Constant for updating y
+		//double		beta = 8.0 / 3.0;			// Constant for updating z
+		//double		lx = 0.1;					// Initial x coordinate
+		//double		ly = 0.0;					// Initial y coordinate
+		//double		lz = 0.0;					// Initial z coordinate
+				
+		double x = -0.72;
+		double y = -0.64;
+		double a = 0.9;
+		double b = -0.6013;
+		double c = 2;
+		double d = 0.5;
 
-		gl.glColor3f(1.0f, 1.0f, 1.0f);	// Draw in white
-		gl.glVertex2d(0.0, 0.0);			// Draw a point at the origin
 
-		gl.glEnd();						// Stop specifying points
+		for (int i=0; i<m; i++)
+		{
+
+			double nx = (x*x) - (y*y) + (a*x) + (b*y);
+			double ny = (2*x*y) + (x*c) + (d*y);
+
+			gl.glColor3f(100, 193, 20);			// Draw in gray, depth-scaled
+			
+			if(iter==0||iter==1){
+			gl.glVertex2d(x/1.4, (y/1.4)+.5);
+			}
+			else if(iter==2) {
+				gl.glVertex2d(y/1.4, (ny/1.4)+.5);
+			}
+			else if(iter==3) {
+				gl.glVertex2d(nx/1.4, (ny/1.4)+.5);
+
+			}
+			else{
+				iter=0;
+			}
+			
+			x = nx;
+			y = ny;
+		}
+
+		gl.glEnd();				// Stop specifying points
 	}
 
 	// Warning! Text is drawn in unprojected canvas/viewport coordinates.
@@ -237,7 +291,7 @@ public final class Application
 	{
 		renderer.beginRendering(w, h);
 		renderer.setColor(1.0f, 1.0f, 0.0f, 1.0f);
-		renderer.draw("This is a point (Frame: " + k + ")", w/2 + 8, h/2 - 5);
+		renderer.draw("This is a Tinkerbell Map (Points: " + m + ") Iteration = " + (iter+1), w/2 + 8, h/2 - 5);
 		renderer.endRendering();
 	}
 }

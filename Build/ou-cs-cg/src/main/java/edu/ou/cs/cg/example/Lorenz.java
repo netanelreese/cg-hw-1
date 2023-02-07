@@ -244,7 +244,7 @@ public final class Lorenz
 			lx = llx;
 			ly = lly;
 			lz = llz;
-			//System.out.println(" " + lx + " " + ly + " " + lz);
+			System.out.println(" " + lx + " " + ly + " " + lz);
 
 			float	cc = (float)((lz + 30.0) / 60.0);
 
